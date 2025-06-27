@@ -1,0 +1,242 @@
+
+import { useParams, useNavigate } from 'react-router-dom';
+import { ArrowLeft, Calendar, Users, Star, GitBranch, ExternalLink } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import DashboardLayout from '@/components/DashboardLayout';
+
+const ProjectDetails = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  // Mock project data - this would come from API
+  const project = {
+    id: id,
+    title: "AI-Powered Healthcare Assistant",
+    description: "A comprehensive healthcare management system that uses AI to assist doctors in diagnosis and treatment recommendations. The platform includes patient management, medical history tracking, and predictive analytics.",
+    type: "hackathon",
+    status: "active",
+    difficulty: "Advanced",
+    category: "Healthcare",
+    technologies: ["React", "Python", "TensorFlow", "Node.js", "MongoDB"],
+    startDate: "2024-01-15",
+    endDate: "2024-02-15",
+    participants: 156,
+    maxParticipants: 200,
+    prize: "$50,000",
+    organizer: {
+      name: "HealthTech Initiative",
+      avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150",
+    },
+    requirements: [
+      "Experience with AI/ML frameworks",
+      "Healthcare domain knowledge preferred",
+      "Team of 2-4 members",
+      "Original code submission required"
+    ],
+    timeline: [
+      { phase: "Registration", date: "Jan 15 - Jan 20", status: "completed" },
+      { phase: "Development", date: "Jan 21 - Feb 10", status: "active" },
+      { phase: "Submission", date: "Feb 11 - Feb 13", status: "upcoming" },
+      { phase: "Judging", date: "Feb 14 - Feb 15", status: "upcoming" }
+    ],
+    mentors: [
+      { name: "Dr. Sarah Johnson", role: "Healthcare AI Expert", avatar: "https://images.unsplash.com/photo-1494790108755-2616b6d5c0b4?w=150" },
+      { name: "Michael Chen", role: "Tech Lead", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150" }
+    ]
+  };
+
+  return (
+    <DashboardLayout>
+      <div className="max-w-6xl mx-auto p-6 space-y-6">
+        {/* Header */}
+        <div className="flex items-center gap-4 mb-6">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate('/explore-projects')}
+            className="flex items-center gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Projects
+          </Button>
+        </div>
+
+        {/* Project Header */}
+        <div className="bg-gradient-to-r from-dicey-teal to-dicey-purple rounded-lg p-6 text-white">
+          <div className="flex justify-between items-start mb-4">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-2">
+                <Badge variant="secondary" className="bg-white/20 text-white">
+                  {project.type === 'hackathon' ? 'Hackathon' : 'Practice Project'}
+                </Badge>
+                <Badge variant="secondary" className="bg-white/20 text-white">
+                  {project.difficulty}
+                </Badge>
+              </div>
+              <h1 className="text-3xl font-bold mb-2">{project.title}</h1>
+              <p className="text-white/90 text-lg">{project.description}</p>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="secondary" size="sm">
+                <Star className="h-4 w-4 mr-2" />
+                Save
+              </Button>
+              <Button variant="secondary" size="sm">
+                <ExternalLink className="h-4 w-4 mr-2" />
+                View Demo
+              </Button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+            <div className="flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              <span className="text-sm">Ends Feb 15, 2024</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              <span className="text-sm">{project.participants}/{project.maxParticipants} participants</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <GitBranch className="h-4 w-4" />
+              <span className="text-sm">{project.category}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Star className="h-4 w-4" />
+              <span className="text-sm">Prize: {project.prize}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Technologies */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Technologies Required</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  {project.technologies.map((tech, index) => (
+                    <Badge key={index} variant="outline">
+                      {tech}
+                    </Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Requirements */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Requirements</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2">
+                  {project.requirements.map((req, index) => (
+                    <li key={index} className="flex items-start gap-2">
+                      <div className="w-2 h-2 bg-dicey-teal rounded-full mt-2 flex-shrink-0"></div>
+                      <span className="text-sm text-gray-600">{req}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* Timeline */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Project Timeline</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {project.timeline.map((phase, index) => (
+                    <div key={index} className="flex items-center gap-4">
+                      <div className={`w-3 h-3 rounded-full ${
+                        phase.status === 'completed' ? 'bg-green-500' :
+                        phase.status === 'active' ? 'bg-dicey-teal' :
+                        'bg-gray-300'
+                      }`}></div>
+                      <div className="flex-1">
+                        <div className="flex justify-between items-center">
+                          <span className="font-medium">{phase.phase}</span>
+                          <span className="text-sm text-gray-500">{phase.date}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Organizer */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Organized by</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center gap-3">
+                  <Avatar>
+                    <AvatarImage src={project.organizer.avatar} />
+                    <AvatarFallback>HT</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-medium">{project.organizer.name}</p>
+                    <p className="text-sm text-gray-500">Verified Organizer</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Mentors */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Mentors</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {project.mentors.map((mentor, index) => (
+                    <div key={index} className="flex items-center gap-3">
+                      <Avatar>
+                        <AvatarImage src={mentor.avatar} />
+                        <AvatarFallback>{mentor.name[0]}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-medium text-sm">{mentor.name}</p>
+                        <p className="text-xs text-gray-500">{mentor.role}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Action Button */}
+            <Card>
+              <CardContent className="pt-6">
+                <Button 
+                  className="w-full bg-gradient-to-r from-dicey-teal to-dicey-purple text-white"
+                  size="lg"
+                >
+                  Join Project
+                </Button>
+                <p className="text-xs text-gray-500 mt-2 text-center">
+                  By joining, you agree to the project terms and conditions
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </DashboardLayout>
+  );
+};
+
+export default ProjectDetails;
