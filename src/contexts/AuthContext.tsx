@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface User {
@@ -45,16 +44,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      // This would be replaced with actual API call
-      const mockUser: User = {
-        id: '1',
-        name: 'David Ogundepo',
-        email: email,
-        username: 'david_ogundepo',
-        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
-        role: 'talent',
-        profileCompleteness: 75
-      };
+      let mockUser: User;
+      
+      // Check for dummy admin login
+      if (email === 'admin' && password === 'admin') {
+        mockUser = {
+          id: 'admin',
+          name: 'Admin User',
+          email: 'admin@diceytech.com',
+          username: 'admin',
+          avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
+          role: 'talent',
+          profileCompleteness: 100
+        };
+      } else {
+        // Regular mock user for any other credentials
+        mockUser = {
+          id: '1',
+          name: 'David Ogundepo',
+          email: email,
+          username: 'david_ogundepo',
+          avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
+          role: 'talent',
+          profileCompleteness: 75
+        };
+      }
       
       localStorage.setItem('diceytech_user', JSON.stringify(mockUser));
       setUser(mockUser);
