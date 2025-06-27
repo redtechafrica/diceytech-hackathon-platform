@@ -147,8 +147,8 @@ const Index = () => {
                   <form onSubmit={handleLogin} className="space-y-4">
                     <div>
                       <Input
-                        type="email"
-                        placeholder="Email address"
+                        type="text"
+                        placeholder="Email or username"
                         value={loginData.email}
                         onChange={(e) => setLoginData(prev => ({ ...prev, email: e.target.value }))}
                         required
