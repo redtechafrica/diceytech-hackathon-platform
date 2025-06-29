@@ -44,126 +44,161 @@ const Index = () => {
   };
 
   const stats = [
-    { label: 'Projects Completed', value: '10+', icon: Trophy, color: 'bg-dicey-yellow' },
+    { label: 'Projects', value: '10+', icon: Trophy, color: 'bg-dicey-yellow' },
     { label: 'Talents', value: '400+', icon: Users, color: 'bg-dicey-magenta' },
     { label: 'Organizations', value: '50+', icon: Building, color: 'bg-dicey-azure' },
   ];
 
   const features = [
-    { icon: Star, title: 'Real-world Projects', desc: 'Work on actual industry challenges', color: 'text-dicey-yellow' },
-    { icon: Trophy, title: 'Win Prizes', desc: 'Cash rewards and recognition', color: 'text-dicey-magenta' },
-    { icon: Users, title: 'Network', desc: 'Connect with professionals', color: 'text-dicey-azure' },
-    { icon: Zap, title: 'Fast Track', desc: 'Accelerate your career', color: 'text-dicey-dark-pink' },
-    { icon: Target, title: 'Skills Focus', desc: 'Targeted skill development', color: 'text-dicey-yellow' },
-    { icon: Code, title: 'Tech Stack', desc: 'Modern technologies', color: 'text-dicey-magenta' },
+    { icon: Star, title: 'Real Projects', desc: 'Work on industry challenges', color: 'text-dicey-yellow' },
+    { icon: Trophy, title: 'Win Prizes', desc: 'Cash & recognition', color: 'text-dicey-magenta' },
+    { icon: Users, title: 'Network', desc: 'Connect with pros', color: 'text-dicey-azure' },
+    { icon: Zap, title: 'Fast Track', desc: 'Accelerate career', color: 'text-dicey-dark-pink' },
+  ];
+
+  // Scrolling images of winners and participants
+  const winnerImages = [
+    'https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=120&h=120&fit=crop&crop=faces',
+    'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=120&h=120&fit=crop&crop=faces',
+    'https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?w=120&h=120&fit=crop&crop=faces',
+    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&crop=faces',
+    'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=120&h=120&fit=crop&crop=faces',
+    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=faces',
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 relative overflow-hidden">
-      {/* Colorful background elements */}
+    <div className="h-screen bg-white dark:bg-gray-900 relative overflow-hidden">
+      {/* Compact colorful background elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-20 left-20 w-32 h-32 bg-dicey-yellow/10 rounded-full blur-xl"></div>
-        <div className="absolute top-40 right-32 w-48 h-48 bg-dicey-magenta/10 rounded-full blur-xl"></div>
-        <div className="absolute bottom-32 left-32 w-40 h-40 bg-dicey-azure/10 rounded-full blur-xl"></div>
-        <div className="absolute bottom-20 right-20 w-36 h-36 bg-dicey-dark-pink/10 rounded-full blur-xl"></div>
+        <div className="absolute top-10 left-10 w-20 h-20 bg-dicey-yellow/15 rounded-full blur-lg"></div>
+        <div className="absolute top-20 right-20 w-32 h-32 bg-dicey-magenta/15 rounded-full blur-lg"></div>
+        <div className="absolute bottom-20 left-20 w-24 h-24 bg-dicey-azure/15 rounded-full blur-lg"></div>
+        <div className="absolute bottom-10 right-32 w-28 h-28 bg-dicey-dark-pink/15 rounded-full blur-lg"></div>
       </div>
 
       {/* Header */}
-      <header className="relative z-10 w-full px-6 py-4 flex justify-between items-center">
+      <header className="relative z-10 w-full px-6 py-3 flex justify-between items-center">
         <div className="flex items-center gap-3">
           {theme === 'dark' ? (
-            <span className="text-2xl font-bold text-dicey-yellow">DiceyTech</span>
+            <span className="text-xl font-bold text-dicey-yellow">DiceyTech</span>
           ) : (
             <img 
               src="https://firebasestorage.googleapis.com/v0/b/icdatinnovation.appspot.com/o/redtech_africa_websitee_v2%2Fdicey%20tech%2Fsponsor_diceytech.png?alt=media&token=201427f2-3a3c-4dc1-a717-f101f8c7d7e2" 
               alt="DiceyTech" 
-              className="h-12 w-auto object-contain"
+              className="h-8 w-auto object-contain"
             />
           )}
         </div>
         <ThemeToggle />
       </header>
 
-      <div className="relative z-10 flex min-h-[calc(100vh-80px)]">
+      <div className="relative z-10 flex h-[calc(100vh-60px)]">
         {/* Left Side - Hero Content */}
-        <div className="flex-1 flex flex-col justify-center px-12 lg:px-20">
-          <div className="max-w-2xl">
-            <div className="mb-6">
-              <Badge className="bg-dicey-magenta text-white mb-4 text-sm px-4 py-2">
+        <div className="flex-1 flex flex-col justify-center px-8 lg:px-12">
+          <div className="max-w-xl">
+            <div className="mb-4">
+              <Badge className="bg-dicey-magenta text-white mb-3 text-xs px-3 py-1">
                 🚀 Africa's Premier Tech Platform
               </Badge>
-              <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+              <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">
                 Build Your Tech Career with
-                <span className="text-dicey-azure block mt-2">Real Projects</span>
+                <span className="text-dicey-azure block mt-1">Real Projects</span>
               </h1>
             </div>
             
-            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+            <p className="text-base text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
               Join hackathons, showcase your skills, and connect with top tech companies across Africa. 
-              Your next career opportunity starts here with DiceyTech.
+              Your next career opportunity starts here.
             </p>
 
-            {/* Enhanced Stats */}
-            <div className="grid grid-cols-3 gap-6 mb-12">
+            {/* Compact Stats */}
+            <div className="grid grid-cols-3 gap-4 mb-6">
               {stats.map((stat, index) => (
                 <div key={index} className="text-center group">
-                  <div className="flex justify-center mb-3">
-                    <div className={`p-4 rounded-2xl ${stat.color} text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                      <stat.icon className="h-8 w-8" />
+                  <div className="flex justify-center mb-2">
+                    <div className={`p-2 rounded-xl ${stat.color} text-white shadow-md group-hover:scale-110 transition-transform duration-300`}>
+                      <stat.icon className="h-5 w-5" />
                     </div>
                   </div>
-                  <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stat.value}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-300 font-medium">{stat.label}</div>
+                  <div className="text-xl font-bold text-gray-900 dark:text-white mb-1">{stat.value}</div>
+                  <div className="text-xs text-gray-600 dark:text-gray-300 font-medium">{stat.label}</div>
                 </div>
               ))}
             </div>
 
-            {/* Enhanced Features Grid */}
-            <div className="grid grid-cols-2 gap-4 mb-8">
+            {/* Compact Features Grid */}
+            <div className="grid grid-cols-2 gap-3 mb-6">
               {features.map((feature, index) => (
-                <div key={index} className="flex items-start gap-3 p-4 rounded-xl bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300">
-                  <div className={`p-2 rounded-lg bg-white dark:bg-gray-800 shadow-sm`}>
-                    <feature.icon className={`h-5 w-5 ${feature.color}`} />
+                <div key={index} className="flex items-center gap-2 p-3 rounded-lg bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-md transition-all duration-300">
+                  <div className={`p-1.5 rounded-md bg-white dark:bg-gray-800 shadow-sm`}>
+                    <feature.icon className={`h-4 w-4 ${feature.color}`} />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 dark:text-white text-sm">{feature.title}</h3>
+                    <h3 className="font-semibold text-gray-900 dark:text-white text-xs">{feature.title}</h3>
                     <p className="text-xs text-gray-600 dark:text-gray-300">{feature.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* Call to Action */}
-            <div className="flex items-center gap-4">
-              <div className="flex -space-x-2">
-                <div className="w-10 h-10 rounded-full bg-dicey-yellow border-2 border-white dark:border-gray-900"></div>
-                <div className="w-10 h-10 rounded-full bg-dicey-magenta border-2 border-white dark:border-gray-900"></div>
-                <div className="w-10 h-10 rounded-full bg-dicey-azure border-2 border-white dark:border-gray-900"></div>
-                <div className="w-10 h-10 rounded-full bg-dicey-dark-pink border-2 border-white dark:border-gray-900"></div>
+            {/* Compact Call to Action */}
+            <div className="flex items-center gap-3">
+              <div className="flex -space-x-1">
+                <div className="w-8 h-8 rounded-full bg-dicey-yellow border-2 border-white dark:border-gray-900"></div>
+                <div className="w-8 h-8 rounded-full bg-dicey-magenta border-2 border-white dark:border-gray-900"></div>
+                <div className="w-8 h-8 rounded-full bg-dicey-azure border-2 border-white dark:border-gray-900"></div>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-900 dark:text-white">Join 400+ talented developers</p>
-                <p className="text-xs text-gray-600 dark:text-gray-300">Building the future of African tech</p>
+                <p className="text-xs font-medium text-gray-900 dark:text-white">Join 400+ developers</p>
+                <p className="text-xs text-gray-600 dark:text-gray-300">Building African tech</p>
               </div>
             </div>
           </div>
         </div>
 
+        {/* Center - Scrolling Winners Images */}
+        <div className="w-32 flex flex-col justify-center items-center bg-dicey-yellow/5 dark:bg-dicey-yellow/10 border-x border-dicey-yellow/20">
+          <div className="text-center mb-4">
+            <h3 className="text-sm font-bold text-dicey-dark-pink dark:text-dicey-yellow mb-1">Our Winners</h3>
+            <p className="text-xs text-gray-600 dark:text-gray-300">& Participants</p>
+          </div>
+          
+          {/* Scrolling animation container */}
+          <div className="relative h-80 overflow-hidden">
+            <div className="absolute inset-0 flex flex-col animate-[scroll_20s_linear_infinite]">
+              {[...winnerImages, ...winnerImages].map((image, index) => (
+                <div key={index} className="mb-4 flex-shrink-0">
+                  <div className="relative">
+                    <img 
+                      src={image} 
+                      alt={`Winner ${index + 1}`}
+                      className="w-16 h-16 rounded-full object-cover border-2 border-dicey-magenta shadow-lg"
+                    />
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-dicey-yellow rounded-full flex items-center justify-center">
+                      <Trophy className="w-2 h-2 text-dicey-dark-pink" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
         {/* Right Side - Login Form */}
-        <div className="w-96 flex flex-col justify-center px-8 bg-gray-50/80 dark:bg-gray-800/80 backdrop-blur-sm border-l border-gray-200/50 dark:border-gray-700/50">
-          <Card className="w-full max-w-md mx-auto border-dicey-azure/30 shadow-xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm">
-            <CardHeader className="text-center pb-6">
-              <div className="w-16 h-16 bg-dicey-azure rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Users className="h-8 w-8 text-white" />
+        <div className="w-80 flex flex-col justify-center px-6 bg-gray-50/80 dark:bg-gray-800/80 backdrop-blur-sm border-l border-gray-200/50 dark:border-gray-700/50">
+          <Card className="w-full border-dicey-azure/30 shadow-xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm">
+            <CardHeader className="text-center pb-4">
+              <div className="w-12 h-12 bg-dicey-azure rounded-xl flex items-center justify-center mx-auto mb-3">
+                <Users className="h-6 w-6 text-white" />
               </div>
-              <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">Welcome Back</CardTitle>
-              <CardDescription className="text-gray-600 dark:text-gray-300">
+              <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">Welcome Back</CardTitle>
+              <CardDescription className="text-sm text-gray-600 dark:text-gray-300">
                 Sign in to your DiceyTech account
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="space-y-2">
+            <CardContent className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-1">
                   <label htmlFor="email" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     Email or username
                   </label>
@@ -174,11 +209,11 @@ const Index = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="border-gray-300 focus:border-dicey-azure focus:ring-dicey-azure/20 h-12"
+                    className="border-gray-300 focus:border-dicey-azure focus:ring-dicey-azure/20 h-10"
                   />
                 </div>
                 
-                <div className="space-y-2">
+                <div className="space-y-1">
                   <label htmlFor="password" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     Password
                   </label>
@@ -190,7 +225,7 @@ const Index = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
-                      className="border-gray-300 focus:border-dicey-azure focus:ring-dicey-azure/20 pr-12 h-12"
+                      className="border-gray-300 focus:border-dicey-azure focus:ring-dicey-azure/20 pr-10 h-10"
                     />
                     <Button
                       type="button"
@@ -210,7 +245,7 @@ const Index = () => {
 
                 <Button
                   type="submit"
-                  className="w-full bg-dicey-azure hover:bg-dicey-azure/90 text-white h-12 text-base font-semibold shadow-lg"
+                  className="w-full bg-dicey-azure hover:bg-dicey-azure/90 text-white h-10 text-sm font-semibold shadow-lg"
                   disabled={isLoading}
                 >
                   {isLoading ? "Signing in..." : "Sign In"}
@@ -227,17 +262,17 @@ const Index = () => {
               </div>
 
               {/* Demo Login Info */}
-              <div className="p-4 bg-dicey-yellow/10 rounded-xl border border-dicey-yellow/30">
+              <div className="p-3 bg-dicey-yellow/10 rounded-lg border border-dicey-yellow/30">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-2 h-2 bg-dicey-yellow rounded-full"></div>
-                  <p className="text-sm text-dicey-dark-pink font-semibold">Demo Login</p>
+                  <p className="text-xs text-dicey-dark-pink font-semibold">Demo Login</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs text-gray-600 dark:text-gray-300">
-                    Email: <code className="bg-white dark:bg-gray-800 px-2 py-1 rounded text-dicey-azure font-mono">admin</code>
+                    Email: <code className="bg-white dark:bg-gray-800 px-1 py-0.5 rounded text-dicey-azure font-mono text-xs">admin</code>
                   </p>
                   <p className="text-xs text-gray-600 dark:text-gray-300">
-                    Password: <code className="bg-white dark:bg-gray-800 px-2 py-1 rounded text-dicey-azure font-mono">admin</code>
+                    Password: <code className="bg-white dark:bg-gray-800 px-1 py-0.5 rounded text-dicey-azure font-mono text-xs">admin</code>
                   </p>
                 </div>
               </div>
@@ -245,6 +280,17 @@ const Index = () => {
           </Card>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes scroll {
+          0% {
+            transform: translateY(0);
+          }
+          100% {
+            transform: translateY(-50%);
+          }
+        }
+      `}</style>
     </div>
   );
 };
