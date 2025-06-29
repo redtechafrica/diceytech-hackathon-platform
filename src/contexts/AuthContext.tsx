@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface User {
@@ -6,19 +7,99 @@ interface User {
   email: string;
   username: string;
   avatar?: string;
-  role: 'talent' | 'organization';
+  role: string;
   profileCompleteness: number;
 }
 
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
   register: (userData: any) => Promise<void>;
-  isLoading: boolean;
+  logout: () => void;
+  isAuthenticated: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Check if user is logged in from localStorage
+    const savedUser = localStorage.getItem('diceytech_user');
+    if (savedUser) {
+      const userData = JSON.parse(savedUser);
+      setUser(userData);
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const login = async (email: string, password: string) => {
+    // Dummy login logic
+    if (email === 'admin' && password === 'admin') {
+      const adminUser: User = {
+        id: '1',
+        name: 'Dolamu Sowunmi',
+        email: 'admin@diceytech.com',
+        username: 'dolamu',
+        role: 'Admin',
+        profileCompleteness: 100,
+        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150'
+      };
+      setUser(adminUser);
+      setIsAuthenticated(true);
+      localStorage.setItem('diceytech_user', JSON.stringify(adminUser));
+      return;
+    }
+    
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    const mockUser: User = {
+      id: Math.random().toString(36).substr(2, 9),
+      name: 'John Doe',
+      email: email,
+      username: email.split('@')[0],
+      role: 'User',
+      profileCompleteness: 75
+    };
+    
+    setUser(mockUser);
+    setIsAuthenticated(true);
+    localStorage.setItem('diceytech_user', JSON.stringify(mockUser));
+  };
+
+  const register = async (userData: any) => {
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    const newUser: User = {
+      id: Math.random().toString(36).substr(2, 9),
+      name: userData.fullName,
+      email: userData.email,
+      username: userData.username,
+      role: 'User',
+      profileCompleteness: 60
+    };
+    
+    setUser(newUser);
+    setIsAuthenticated(true);
+    localStorage.setItem('diceytech_user', JSON.stringify(newUser));
+  };
+
+  const logout = () => {
+    setUser(null);
+    setIsAuthenticated(false);
+    localStorage.removeItem('diceytech_user');
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, login, register, logout, isAuthenticated }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -26,89 +107,4 @@ export const useAuth = () => {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-};
-
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Check for existing session
-    const savedUser = localStorage.getItem('diceytech_user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-    setIsLoading(false);
-  }, []);
-
-  const login = async (email: string, password: string) => {
-    setIsLoading(true);
-    try {
-      let mockUser: User;
-      
-      // Check for dummy admin login
-      if (email === 'admin' && password === 'admin') {
-        mockUser = {
-          id: 'admin',
-          name: 'Admin User',
-          email: 'admin@diceytech.com',
-          username: 'admin',
-          avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
-          role: 'talent',
-          profileCompleteness: 100
-        };
-      } else {
-        // Regular mock user for any other credentials
-        mockUser = {
-          id: '1',
-          name: 'David Ogundepo',
-          email: email,
-          username: 'david_ogundepo',
-          avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
-          role: 'talent',
-          profileCompleteness: 75
-        };
-      }
-      
-      localStorage.setItem('diceytech_user', JSON.stringify(mockUser));
-      setUser(mockUser);
-    } catch (error) {
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const register = async (userData: any) => {
-    setIsLoading(true);
-    try {
-      // This would be replaced with actual API call
-      const newUser: User = {
-        id: Math.random().toString(36).substr(2, 9),
-        name: userData.fullName,
-        email: userData.email,
-        username: userData.username,
-        role: 'talent',
-        profileCompleteness: 25
-      };
-      
-      localStorage.setItem('diceytech_user', JSON.stringify(newUser));
-      setUser(newUser);
-    } catch (error) {
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const logout = () => {
-    localStorage.removeItem('diceytech_user');
-    setUser(null);
-  };
-
-  return (
-    <AuthContext.Provider value={{ user, login, logout, register, isLoading }}>
-      {children}
-    </AuthContext.Provider>
-  );
 };

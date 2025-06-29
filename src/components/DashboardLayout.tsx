@@ -32,10 +32,13 @@ import {
   FolderOpen,
   Briefcase,
   FileText,
-  Trophy
+  Trophy,
+  Zap,
+  Award
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Badge } from "@/components/ui/badge";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -63,18 +66,15 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gray-50">
-        <Sidebar className="border-r border-gray-200">
-          <SidebarHeader className="p-6 border-b border-gray-200">
+      <div className="min-h-screen flex w-full bg-gray-50 dark:bg-gray-900">
+        <Sidebar className="border-r border-gray-200 dark:border-gray-800">
+          <SidebarHeader className="p-6 border-b border-gray-200 dark:border-gray-800">
             <div className="flex items-center gap-3">
               <img 
                 src="https://firebasestorage.googleapis.com/v0/b/icdatinnovation.appspot.com/o/redtech_africa_websitee_v2%2Fdicey%20tech%2Fsponsor_diceytech.png?alt=media&token=201427f2-3a3c-4dc1-a717-f101f8c7d7e2" 
                 alt="DiceyTech" 
                 className="h-8 w-8"
               />
-              <span className="font-bold text-xl bg-gradient-to-r from-dicey-teal to-dicey-purple bg-clip-text text-transparent">
-                DiceyTech
-              </span>
             </div>
           </SidebarHeader>
           
@@ -99,7 +99,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                         `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
                           isActive 
                             ? 'bg-dicey-teal text-white' 
-                            : 'text-gray-700 hover:bg-gray-100'
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                         }`
                       }
                     >
@@ -111,18 +111,22 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
               ))}
             </SidebarMenu>
 
-            <div className="mt-8 pt-4 border-t border-gray-200">
-              <div className="text-sm font-medium text-gray-500 mb-2">Quick Actions</div>
+            <div className="mt-8 pt-4 border-t border-gray-200 dark:border-gray-800">
+              <div className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Quick Actions</div>
               <div className="space-y-2">
-                <Button variant="ghost" size="sm" className="w-full justify-start">
+                <Button variant="ghost" size="sm" className="w-full justify-start" onClick={() => navigate('/hackathons')}>
                   <Trophy className="mr-2 h-4 w-4" />
                   Hackathons
                   <Badge variant="secondary" className="ml-auto">12</Badge>
                 </Button>
-                <Button variant="ghost" size="sm" className="w-full justify-start">
+                <Button variant="ghost" size="sm" className="w-full justify-start" onClick={() => navigate('/notifications')}>
                   <Bell className="mr-2 h-4 w-4" />
                   Notifications
                   <Badge variant="destructive" className="ml-auto">3</Badge>
+                </Button>
+                <Button variant="ghost" size="sm" className="w-full justify-start" onClick={() => navigate('/achievements')}>
+                  <Award className="mr-2 h-4 w-4" />
+                  Achievements
                 </Button>
               </div>
             </div>
@@ -131,17 +135,19 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
 
         <div className="flex-1 flex flex-col">
           {/* Top Header */}
-          <header className="bg-white border-b border-gray-200 px-6 py-4">
+          <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-800 px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <SidebarTrigger />
-                <div className="text-sm text-gray-600">
-                  Welcome back, <span className="font-medium text-gray-900">{user?.name}</span>
+                <div className="text-sm text-gray-600 dark:text-gray-300">
+                  Welcome back, <span className="font-medium text-gray-900 dark:text-white">{user?.name}</span>
                 </div>
               </div>
 
               <div className="flex items-center gap-4">
-                <Button variant="ghost" size="icon" className="relative">
+                <ThemeToggle />
+                
+                <Button variant="ghost" size="icon" className="relative" onClick={() => navigate('/notifications')}>
                   <Bell className="h-5 w-5" />
                   <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs">
                     3

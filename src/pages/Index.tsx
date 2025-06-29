@@ -72,21 +72,20 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-dicey-teal via-dicey-purple to-dicey-yellow relative overflow-hidden">
+    <div className="min-h-screen bg-white dark:bg-gray-900 relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSI0Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-30"></div>
       
       <div className="relative z-10 flex min-h-screen">
         {/* Left Side - Hero */}
-        <div className="flex-1 flex items-center justify-center p-8 lg:p-12">
-          <div className="max-w-lg text-white animate-fade-in">
+        <div className="flex-1 flex items-center justify-center p-8 lg:p-12 bg-dicey-teal text-white">
+          <div className="max-w-lg animate-fade-in">
             <div className="flex items-center mb-8">
               <img 
                 src="https://firebasestorage.googleapis.com/v0/b/icdatinnovation.appspot.com/o/redtech_africa_websitee_v2%2Fdicey%20tech%2Fsponsor_diceytech.png?alt=media&token=201427f2-3a3c-4dc1-a717-f101f8c7d7e2" 
                 alt="DiceyTech Logo" 
-                className="h-12 w-12 mr-3"
+                className="h-12 w-12"
               />
-              <h1 className="text-3xl font-bold">DiceyTech</h1>
             </div>
             
             <div className="mb-8">
@@ -105,15 +104,15 @@ const Index = () => {
 
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
-                <div className="text-2xl font-bold text-dicey-yellow">500+</div>
-                <div className="text-sm opacity-80">Active Projects</div>
+                <div className="text-2xl font-bold text-dicey-yellow">10</div>
+                <div className="text-sm opacity-80">Projects Completed</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-dicey-yellow">1200+</div>
+                <div className="text-2xl font-bold text-dicey-yellow">400+</div>
                 <div className="text-sm opacity-80">Talents</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-dicey-yellow">200+</div>
+                <div className="text-2xl font-bold text-dicey-yellow">50+</div>
                 <div className="text-sm opacity-80">Organizations</div>
               </div>
             </div>
@@ -122,9 +121,9 @@ const Index = () => {
 
         {/* Right Side - Auth Forms */}
         <div className="flex-1 flex items-center justify-center p-8 lg:p-12">
-          <Card className="w-full max-w-md bg-white/95 backdrop-blur-sm shadow-2xl border-0">
+          <Card className="w-full max-w-md bg-white dark:bg-gray-800 backdrop-blur-sm shadow-2xl border-0">
             <CardHeader className="text-center pb-4">
-              <CardTitle className="text-2xl font-bold bg-gradient-to-r from-dicey-teal to-dicey-purple bg-clip-text text-transparent">
+              <CardTitle className="text-2xl font-bold text-dicey-teal">
                 Welcome to DiceyTech
               </CardTitle>
               <CardDescription>

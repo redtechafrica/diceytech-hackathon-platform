@@ -75,7 +75,7 @@ const Dashboard = () => {
     <DashboardLayout>
       <div className="space-y-6 animate-fade-in">
         {/* Welcome Section */}
-        <div className="bg-gradient-to-r from-dicey-teal to-dicey-purple rounded-xl p-6 text-white">
+        <div className="bg-dicey-teal rounded-xl p-6 text-white">
           <div className="flex items-start justify-between">
             <div>
               <h1 className="text-2xl font-bold mb-2">
@@ -110,7 +110,7 @@ const Dashboard = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                    <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</p>
                   </div>
                   <div className={`p-3 rounded-full bg-gray-100 ${stat.color}`}>
                     <stat.icon className="h-6 w-6" />
@@ -140,7 +140,7 @@ const Dashboard = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 {recentProjects.map((project) => (
-                  <div key={project.id} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+                  <div key={project.id} className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                        onClick={() => navigate(`/project/${project.id}`)}>
                     <img 
                       src={project.image} 
@@ -148,8 +148,8 @@ const Dashboard = () => {
                       className="w-16 h-16 rounded-lg object-cover"
                     />
                     <div className="flex-1">
-                      <h4 className="font-semibold text-gray-900">{project.title}</h4>
-                      <p className="text-sm text-gray-600">{project.organization}</p>
+                      <h4 className="font-semibold text-gray-900 dark:text-white">{project.title}</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">{project.organization}</p>
                       <div className="flex items-center gap-2 mt-2">
                         <Badge variant={project.status === 'Active' ? 'default' : 'secondary'}>
                           {project.status}
@@ -192,12 +192,12 @@ const Dashboard = () => {
               </CardHeader>
               <CardContent className="space-y-3">
                 {upcomingEvents.map((event, index) => (
-                  <div key={index} className="p-3 bg-gray-50 rounded-lg">
+                  <div key={index} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                     <div className="flex items-start justify-between mb-2">
                       <h5 className="font-medium text-sm">{event.title}</h5>
                       <Badge variant="outline" className="text-xs">{event.type}</Badge>
                     </div>
-                    <div className="space-y-1 text-xs text-gray-600">
+                    <div className="space-y-1 text-xs text-gray-600 dark:text-gray-400">
                       <div className="flex items-center gap-1">
                         <Clock className="h-3 w-3" />
                         {event.date} at {event.time}
@@ -209,7 +209,7 @@ const Dashboard = () => {
                     </div>
                   </div>
                 ))}
-                <Button variant="ghost" size="sm" className="w-full">
+                <Button variant="ghost" size="sm" className="w-full" onClick={() => navigate('/hackathons')}>
                   View All Events
                 </Button>
               </CardContent>
@@ -249,16 +249,20 @@ const Dashboard = () => {
             </Card>
 
             {/* Achievement */}
-            <Card className="bg-gradient-to-br from-dicey-yellow/10 to-dicey-purple/10 border-dicey-purple/20">
+            <Card className="bg-dicey-yellow/10 border-dicey-yellow/20">
               <CardContent className="p-4 text-center">
                 <div className="text-dicey-purple mb-2">
                   <Trophy className="h-8 w-8 mx-auto" />
                 </div>
-                <h4 className="font-semibold text-gray-900 mb-1">Rising Star!</h4>
-                <p className="text-sm text-gray-600 mb-3">
+                <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Rising Star!</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
                   You're in the top 10% of active participants this month.
                 </p>
-                <Button size="sm" className="bg-dicey-purple hover:bg-dicey-purple/90">
+                <Button 
+                  size="sm" 
+                  className="bg-dicey-purple hover:bg-dicey-purple/90"
+                  onClick={() => navigate('/achievements')}
+                >
                   View Achievements
                 </Button>
               </CardContent>
