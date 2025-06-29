@@ -112,9 +112,9 @@ Our vibrant color palette reflects the energy and innovation of African tech:
 
 ---
 
-## 🌍 Impact Across Africa
+## 🌍 Impact Across Africa and UK
 
-DiceyTech is making a difference in the African tech ecosystem:
+DiceyTech is making a difference in the African and UK tech ecosystem:
 
 - **Nigeria**: Leading participation with 150+ active developers
 - **Kenya**: Strong fintech and mobile development community
@@ -139,7 +139,7 @@ DiceyTech is making a difference in the African tech ecosystem:
 ## 📞 Connect With Us
 
 **REDtech Africa**  
-Email: partnerships@redtechafrica.com  
+Email: hello@redtechafrica.com  
 Website: [REDtech Africa Website]
 
 **David Ogundepo - Platform Architect**  
@@ -147,8 +147,8 @@ Email: david@diceytech.com
 LinkedIn: [David's LinkedIn Profile]
 
 **DiceyTech Platform**  
-Email: hello@diceytech.com  
-Twitter: @DiceyTechAfrica  
+Email: sofiane@diceytech.co.uk 
+Twitter: @DiceyTech
 LinkedIn: DiceyTech Platform
 
 ---
@@ -194,5 +194,5 @@ Special thanks to:
 
 ---
 
-*Last updated: December 2024*  
+*Last updated: June 2025*  
 *Version: 2.0*
