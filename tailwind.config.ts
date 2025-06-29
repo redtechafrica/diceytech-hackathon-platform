@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -63,10 +62,11 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// DiceyTech brand colors
-				'dicey-teal': 'hsl(174 72% 49%)',
-				'dicey-purple': 'hsl(278 83% 67%)',
-				'dicey-yellow': 'hsl(45 93% 58%)',
+				// DiceyTech brand colors - exact hex values
+				'dicey-yellow': '#fed963',
+				'dicey-magenta': '#df4593',
+				'dicey-azure': '#428b9f',
+				'dicey-dark-pink': '#4e1845',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

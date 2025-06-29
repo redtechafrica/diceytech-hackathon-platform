@@ -1,15 +1,20 @@
 
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, Users, Star, GitBranch, ExternalLink } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowLeft, Calendar, Users, Star, GitBranch, ExternalLink, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useToast } from '@/hooks/use-toast';
 import DashboardLayout from '@/components/DashboardLayout';
 
 const ProjectDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const [isSaved, setIsSaved] = useState(false);
+  const [hasJoined, setHasJoined] = useState(false);
 
   // Mock project data - this would come from API
   const project = {
@@ -48,6 +53,24 @@ const ProjectDetails = () => {
     ]
   };
 
+  const handleSaveProject = () => {
+    setIsSaved(!isSaved);
+    toast({
+      title: isSaved ? "Project Removed" : "Project Saved",
+      description: isSaved ? "Project removed from your saved list" : "Project added to your saved list",
+    });
+  };
+
+  const handleJoinProject = () => {
+    if (!hasJoined) {
+      setHasJoined(true);
+      toast({
+        title: "Successfully Joined!",
+        description: "You have joined the project. Check your applications for updates.",
+      });
+    }
+  };
+
   return (
     <DashboardLayout>
       <div className="max-w-6xl mx-auto p-6 space-y-6">
@@ -57,7 +80,7 @@ const ProjectDetails = () => {
             variant="outline"
             size="sm"
             onClick={() => navigate('/explore-projects')}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 hover:bg-dicey-azure hover:text-white"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Projects
@@ -65,14 +88,14 @@ const ProjectDetails = () => {
         </div>
 
         {/* Project Header */}
-        <div className="bg-gradient-to-r from-dicey-teal to-dicey-purple rounded-lg p-6 text-white">
+        <div className="bg-dicey-azure rounded-xl p-6 text-white">
           <div className="flex justify-between items-start mb-4">
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
-                <Badge variant="secondary" className="bg-white/20 text-white">
+                <Badge variant="secondary" className="bg-dicey-yellow text-dicey-dark-pink">
                   {project.type === 'hackathon' ? 'Hackathon' : 'Practice Project'}
                 </Badge>
-                <Badge variant="secondary" className="bg-white/20 text-white">
+                <Badge variant="secondary" className="bg-dicey-magenta text-white">
                   {project.difficulty}
                 </Badge>
               </div>
@@ -80,11 +103,16 @@ const ProjectDetails = () => {
               <p className="text-white/90 text-lg">{project.description}</p>
             </div>
             <div className="flex gap-2">
-              <Button variant="secondary" size="sm">
-                <Star className="h-4 w-4 mr-2" />
-                Save
+              <Button 
+                variant="secondary" 
+                size="sm"
+                onClick={handleSaveProject}
+                className={`${isSaved ? 'bg-dicey-yellow text-dicey-dark-pink' : 'bg-white/20 text-white hover:bg-white/30'}`}
+              >
+                <Heart className={`h-4 w-4 mr-2 ${isSaved ? 'fill-current' : ''}`} />
+                {isSaved ? 'Saved' : 'Save'}
               </Button>
-              <Button variant="secondary" size="sm">
+              <Button variant="secondary" size="sm" className="bg-white/20 text-white hover:bg-white/30">
                 <ExternalLink className="h-4 w-4 mr-2" />
                 View Demo
               </Button>
@@ -122,7 +150,7 @@ const ProjectDetails = () => {
               <CardContent>
                 <div className="flex flex-wrap gap-2">
                   {project.technologies.map((tech, index) => (
-                    <Badge key={index} variant="outline">
+                    <Badge key={index} variant="outline" className="border-dicey-azure text-dicey-azure">
                       {tech}
                     </Badge>
                   ))}
@@ -139,8 +167,8 @@ const ProjectDetails = () => {
                 <ul className="space-y-2">
                   {project.requirements.map((req, index) => (
                     <li key={index} className="flex items-start gap-2">
-                      <div className="w-2 h-2 bg-dicey-teal rounded-full mt-2 flex-shrink-0"></div>
-                      <span className="text-sm text-gray-600">{req}</span>
+                      <div className="w-2 h-2 bg-dicey-magenta rounded-full mt-2 flex-shrink-0"></div>
+                      <span className="text-sm text-gray-600 dark:text-gray-300">{req}</span>
                     </li>
                   ))}
                 </ul>
@@ -157,8 +185,8 @@ const ProjectDetails = () => {
                   {project.timeline.map((phase, index) => (
                     <div key={index} className="flex items-center gap-4">
                       <div className={`w-3 h-3 rounded-full ${
-                        phase.status === 'completed' ? 'bg-green-500' :
-                        phase.status === 'active' ? 'bg-dicey-teal' :
+                        phase.status === 'completed' ? 'bg-dicey-yellow' :
+                        phase.status === 'active' ? 'bg-dicey-magenta' :
                         'bg-gray-300'
                       }`}></div>
                       <div className="flex-1">
@@ -185,7 +213,7 @@ const ProjectDetails = () => {
                 <div className="flex items-center gap-3">
                   <Avatar>
                     <AvatarImage src={project.organizer.avatar} />
-                    <AvatarFallback>HT</AvatarFallback>
+                    <AvatarFallback className="bg-dicey-azure text-white">HT</AvatarFallback>
                   </Avatar>
                   <div>
                     <p className="font-medium">{project.organizer.name}</p>
@@ -206,7 +234,7 @@ const ProjectDetails = () => {
                     <div key={index} className="flex items-center gap-3">
                       <Avatar>
                         <AvatarImage src={mentor.avatar} />
-                        <AvatarFallback>{mentor.name[0]}</AvatarFallback>
+                        <AvatarFallback className="bg-dicey-magenta text-white">{mentor.name[0]}</AvatarFallback>
                       </Avatar>
                       <div>
                         <p className="font-medium text-sm">{mentor.name}</p>
@@ -222,10 +250,16 @@ const ProjectDetails = () => {
             <Card>
               <CardContent className="pt-6">
                 <Button 
-                  className="w-full bg-gradient-to-r from-dicey-teal to-dicey-purple text-white"
+                  className={`w-full text-white ${
+                    hasJoined 
+                      ? 'bg-dicey-yellow text-dicey-dark-pink hover:bg-dicey-yellow/90' 
+                      : 'bg-dicey-magenta hover:bg-dicey-magenta/90'
+                  }`}
                   size="lg"
+                  onClick={handleJoinProject}
+                  disabled={hasJoined}
                 >
-                  Join Project
+                  {hasJoined ? 'Joined Successfully!' : 'Join Project'}
                 </Button>
                 <p className="text-xs text-gray-500 mt-2 text-center">
                   By joining, you agree to the project terms and conditions

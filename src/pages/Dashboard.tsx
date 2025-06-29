@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '@/components/DashboardLayout';
@@ -25,8 +24,8 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const stats = [
-    { title: 'Active Projects', value: '12', icon: Trophy, color: 'text-dicey-teal' },
-    { title: 'Hackathons Joined', value: '8', icon: Users, color: 'text-dicey-purple' },
+    { title: 'Active Projects', value: '12', icon: Trophy, color: 'text-dicey-azure' },
+    { title: 'Hackathons Joined', value: '8', icon: Users, color: 'text-dicey-magenta' },
     { title: 'Applications', value: '15', icon: Calendar, color: 'text-dicey-yellow' },
     { title: 'Profile Views', value: '247', icon: Target, color: 'text-green-600' },
   ];
@@ -75,7 +74,7 @@ const Dashboard = () => {
     <DashboardLayout>
       <div className="space-y-6 animate-fade-in">
         {/* Welcome Section */}
-        <div className="bg-dicey-teal rounded-xl p-6 text-white">
+        <div className="bg-dicey-azure rounded-xl p-6 text-white">
           <div className="flex items-start justify-between">
             <div>
               <h1 className="text-2xl font-bold mb-2">
@@ -95,7 +94,7 @@ const Dashboard = () => {
             <Button 
               variant="secondary" 
               onClick={() => navigate('/profile')}
-              className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+              className="bg-dicey-yellow hover:bg-dicey-yellow/90 text-dicey-dark-pink border-dicey-yellow"
             >
               Complete Profile
             </Button>
@@ -109,10 +108,10 @@ const Dashboard = () => {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">{stat.title}</p>
+                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300">{stat.title}</p>
                     <p className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</p>
                   </div>
-                  <div className={`p-3 rounded-full bg-gray-100 ${stat.color}`}>
+                  <div className={`p-3 rounded-full bg-gray-100 dark:bg-gray-800 ${stat.color}`}>
                     <stat.icon className="h-6 w-6" />
                   </div>
                 </div>
@@ -151,7 +150,7 @@ const Dashboard = () => {
                       <h4 className="font-semibold text-gray-900 dark:text-white">{project.title}</h4>
                       <p className="text-sm text-gray-600 dark:text-gray-300">{project.organization}</p>
                       <div className="flex items-center gap-2 mt-2">
-                        <Badge variant={project.status === 'Active' ? 'default' : 'secondary'}>
+                        <Badge variant={project.status === 'Active' ? 'default' : 'secondary'} className="bg-dicey-magenta text-white">
                           {project.status}
                         </Badge>
                         <Badge variant="outline">{project.difficulty}</Badge>
@@ -170,7 +169,7 @@ const Dashboard = () => {
                 
                 <Button 
                   variant="ghost" 
-                  className="w-full border-2 border-dashed border-gray-300 h-20"
+                  className="w-full border-2 border-dashed border-gray-300 h-20 hover:border-dicey-azure hover:bg-dicey-azure/10"
                   onClick={() => navigate('/explore-projects')}
                 >
                   <Plus className="mr-2 h-5 w-5" />
@@ -223,7 +222,7 @@ const Dashboard = () => {
               <CardContent className="space-y-3">
                 <Button 
                   variant="outline" 
-                  className="w-full justify-start"
+                  className="w-full justify-start hover:bg-dicey-azure hover:text-white"
                   onClick={() => navigate('/add-project')}
                 >
                   <Plus className="mr-2 h-4 w-4" />
@@ -231,7 +230,7 @@ const Dashboard = () => {
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="w-full justify-start"
+                  className="w-full justify-start hover:bg-dicey-magenta hover:text-white"
                   onClick={() => navigate('/job-opportunities')}
                 >
                   <TrendingUp className="mr-2 h-4 w-4" />
@@ -239,7 +238,7 @@ const Dashboard = () => {
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="w-full justify-start"
+                  className="w-full justify-start hover:bg-dicey-yellow hover:text-dicey-dark-pink"
                   onClick={() => navigate('/profile')}
                 >
                   <Target className="mr-2 h-4 w-4" />
@@ -251,7 +250,7 @@ const Dashboard = () => {
             {/* Achievement */}
             <Card className="bg-dicey-yellow/10 border-dicey-yellow/20">
               <CardContent className="p-4 text-center">
-                <div className="text-dicey-purple mb-2">
+                <div className="text-dicey-magenta mb-2">
                   <Trophy className="h-8 w-8 mx-auto" />
                 </div>
                 <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Rising Star!</h4>
@@ -260,7 +259,7 @@ const Dashboard = () => {
                 </p>
                 <Button 
                   size="sm" 
-                  className="bg-dicey-purple hover:bg-dicey-purple/90"
+                  className="bg-dicey-magenta hover:bg-dicey-magenta/90 text-white"
                   onClick={() => navigate('/achievements')}
                 >
                   View Achievements
