@@ -143,7 +143,7 @@ Email: hello@redtechafrica.com
 Website: [REDtech Africa Website]
 
 **David Ogundepo - Platform Architect**  
-Email: david@diceytech.com  
+Email: david@redtechafrica.com  
 LinkedIn: [David's LinkedIn Profile]
 
 **DiceyTech Platform**  
