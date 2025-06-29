@@ -752,10 +752,10 @@ class Command(BaseCommand):
 ## 🤝 Support & Maintenance
 
 **REDtech Africa Development Team**  
-Email: tech-support@redtechafrica.com  
+Email: hello@redtechafrica.com  
 
 **David Ogundepo - Lead Architect**  
-Email: david.ogundepo@diceytech.com  
+Email: david@redtechafrica.com  
 
 **Documentation Updates**  
 This guide is updated regularly. Check the DiceyTech platform repository for the latest version.
@@ -764,6 +764,6 @@ This guide is updated regularly. Check the DiceyTech platform repository for the
 
 *This integration guide ensures seamless connection between the DiceyTech frontend and your Django/AWS backend infrastructure. Follow the implementation phases for systematic deployment.*
 
-**Last Updated:** December 2024  
+**Last Updated:** June 2025  
 **Version:** 2.1  
 **Maintained by:** REDtech Africa & David Ogundepo
