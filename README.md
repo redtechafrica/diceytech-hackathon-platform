@@ -8,7 +8,7 @@
 DiceyTech is a revolutionary platform designed to bridge the gap between talented African developers and industry opportunities. Through our comprehensive hackathon ecosystem, we connect emerging tech talent with real-world projects, fostering innovation and career growth across the continent.
 
 **Developed by:** DiceyTech, REDtech Africa & David Ogundepo  
-**Platform URL:** [Your DiceyTech Platform URL]
+**Platform URL:** [---]
 
 ---
 
