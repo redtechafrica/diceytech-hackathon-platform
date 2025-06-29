@@ -54,32 +54,32 @@
   }
 
   .dark {
-    --background: 310 63% 19%;
+    --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-    --card: 310 63% 19%;
+    --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
-    --popover: 310 63% 19%;
+    --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
     --primary: 196 36% 44%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 310 63% 25%;
+    --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 310 63% 25%;
+    --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
     --accent: 331 66% 58%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 310 63% 25%;
-    --input: 310 63% 25%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
     --ring: 196 36% 44%;
-    --sidebar-background: 310 63% 19%;
-    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-background: 222.2 84% 4.9%;
+    --sidebar-foreground: 210 40% 98%;
     --sidebar-primary: 196 36% 44%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 310 63% 25%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 310 63% 25%;
+    --sidebar-accent: 217.2 32.6% 17.5%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217.2 32.6% 17.5%;
     --sidebar-ring: 196 36% 44%;
   }
 }
@@ -125,5 +125,29 @@
   
   .bg-dicey-dark-pink {
     background-color: hsl(310 63% 19%);
+  }
+
+  /* Improved contrast for better readability */
+  .text-readable-light {
+    color: hsl(222.2 84% 4.9%);
+  }
+  
+  .text-readable-dark {
+    color: hsl(210 40% 98%);
+  }
+  
+  /* Progress bar improvements */
+  .progress-dicey {
+    background-color: hsl(196 36% 44%);
+  }
+  
+  /* Card hover effects */
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  .dark .card-hover:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
   }
 }
