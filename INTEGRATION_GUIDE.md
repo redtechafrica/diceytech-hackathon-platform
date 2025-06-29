@@ -1,180 +1,187 @@
 
-# DiceyTech Platform Integration Guide
+# DiceyTech Platform - Database & API Integration Guide
 
-## Overview
-This guide provides step-by-step instructions for integrating the DiceyTech platform with Django backend and AWS services.
-
-## Architecture Overview
-
-```
-Frontend (React/TypeScript) → Django REST API → AWS Services
-```
-
-## Table of Contents
-1. [Django Backend Setup](#django-backend-setup)
-2. [AWS Configuration](#aws-configuration)
-3. [Authentication Integration](#authentication-integration)
-4. [Database Models](#database-models)
-5. [API Endpoints](#api-endpoints)
-6. [File Storage](#file-storage)
-7. [Frontend Integration](#frontend-integration)
-8. [Deployment](#deployment)
+**REDtech Africa & David Ogundepo**  
+*Complete Integration Documentation for Django & AWS*
 
 ---
 
-## Django Backend Setup
+## 🎯 Overview
 
-### 1. Install Dependencies
+This guide provides comprehensive instructions for connecting the DiceyTech platform frontend to a Django backend with AWS infrastructure. The platform is designed to seamlessly integrate with modern backend technologies while maintaining scalability and performance.
+
+**Architecture Stack:**
+- **Frontend**: React + TypeScript (Current Implementation)
+- **Backend**: Django + Django REST Framework
+- **Database**: PostgreSQL on AWS RDS
+- **Storage**: AWS S3 for file uploads
+- **Caching**: Redis on AWS ElastiCache
+- **Deployment**: AWS EC2/ECS with Load Balancers
+
+---
+
+## 🚀 Quick Start Integration
+
+### 1. Django Backend Setup
 
 ```bash
-pip install django
-pip install djangorestframework
-pip install django-cors-headers
-pip install django-storages
-pip install boto3
-pip install python-decouple
-pip install djangorestframework-simplejwt
-pip install Pillow
+# Create Django project
+django-admin startproject diceytech_backend
+cd diceytech_backend
+
+# Install required packages
+pip install django djangorestframework django-cors-headers
+pip install psycopg2-binary boto3 django-storages redis
+pip install django-allauth djangorestframework-simplejwt
+pip install pillow python-decouple celery
+
+# Create core apps
+python manage.py startapp authentication
+python manage.py startapp hackathons
+python manage.py startapp projects
+python manage.py startapp profiles
+python manage.py startapp notifications
 ```
 
-### 2. Django Settings Configuration
+### 2. AWS Services Configuration
 
 ```python
-# settings.py
+# settings.py - AWS Configuration
 import os
 from decouple import config
 
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',
-    'rest_framework_simplejwt',
-    'corsheaders',
-    'storages',
-    'accounts',
-    'projects',
-    'jobs',
-    'hackathons',
-    'notifications',
-]
-
-MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
-ROOT_URLCONF = 'diceytech.urls'
-
-# CORS Settings
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "https://your-frontend-domain.com",
-]
-
-# REST Framework Configuration
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 20
-}
-
-# JWT Settings
-from datetime import timedelta
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
-    'ROTATE_REFRESH_TOKENS': True,
-}
-
-# AWS Configuration
+# AWS Settings
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
 AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME', default='us-east-1')
-AWS_DEFAULT_ACL = None
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+AWS_DEFAULT_ACL = None
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
 
 # Storage Configuration
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.StaticS3Boto3Storage'
 
-MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
-STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
+# Database Configuration (AWS RDS)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT', default='5432'),
+    }
+}
+
+# Redis Configuration (AWS ElastiCache)
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': config('REDIS_URL'),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
 ```
 
 ---
 
-## Database Models
+## 📊 Database Models
 
-### 1. User Profile Model
-
+### User Profile Model
 ```python
-# accounts/models.py
+# profiles/models.py
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class User(AbstractUser):
-    email = models.EmailField(unique=True)
-    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
-    bio = models.TextField(max_length=500, blank=True)
+    full_name = models.CharField(max_length=255)
+    bio = models.TextField(blank=True)
+    profile_picture = models.ImageField(upload_to='profiles/', blank=True)
     location = models.CharField(max_length=100, blank=True)
-    website = models.URLField(blank=True)
     github_url = models.URLField(blank=True)
     linkedin_url = models.URLField(blank=True)
-    twitter_url = models.URLField(blank=True)
+    portfolio_url = models.URLField(blank=True)
     phone = models.CharField(max_length=20, blank=True)
     skills = models.ManyToManyField('Skill', blank=True)
-    goals = models.TextField(max_length=200, blank=True)
+    experience_level = models.CharField(
+        max_length=20,
+        choices=[
+            ('beginner', 'Beginner'),
+            ('intermediate', 'Intermediate'),
+            ('advanced', 'Advanced')
+        ],
+        default='beginner'
+    )
+    total_points = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
 
 class Skill(models.Model):
     name = models.CharField(max_length=50, unique=True)
     category = models.CharField(max_length=50)
-    
+    created_at = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
         return self.name
-
-class Experience(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='experiences')
-    title = models.CharField(max_length=100)
-    company = models.CharField(max_length=100)
-    start_date = models.DateField()
-    end_date = models.DateField(null=True, blank=True)
-    description = models.TextField()
-    is_current = models.BooleanField(default=False)
-
-class Education(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='education')
-    degree = models.CharField(max_length=100)
-    school = models.CharField(max_length=100)
-    start_date = models.DateField()
-    end_date = models.DateField(null=True, blank=True)
-    description = models.TextField()
 ```
 
-### 2. Project Models
+### Hackathon Models
+```python
+# hackathons/models.py
+from django.db import models
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
+
+class Hackathon(models.Model):
+    DIFFICULTY_CHOICES = [
+        ('beginner', 'Beginner'),
+        ('intermediate', 'Intermediate'),
+        ('advanced', 'Advanced')
+    ]
+    
+    STATUS_CHOICES = [
+        ('upcoming', 'Upcoming'),
+        ('active', 'Active'),
+        ('ended', 'Ended'),
+        ('cancelled', 'Cancelled')
+    ]
+
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    requirements = models.TextField()
+    prizes = models.JSONField(default=list)
+    difficulty = models.CharField(max_length=20, choices=DIFFICULTY_CHOICES)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='upcoming')
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    max_participants = models.IntegerField(null=True, blank=True)
+    registration_deadline = models.DateTimeField()
+    banner_image = models.ImageField(upload_to='hackathons/', blank=True)
+    organizer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='organized_hackathons')
+    participants = models.ManyToManyField(User, through='HackathonParticipation', blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class HackathonParticipation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    hackathon = models.ForeignKey(Hackathon, on_delete=models.CASCADE)
+    team_name = models.CharField(max_length=100, blank=True)
+    submission_url = models.URLField(blank=True)
+    submission_description = models.TextField(blank=True)
+    submitted_at = models.DateTimeField(null=True, blank=True)
+    score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    rank = models.IntegerField(null=True, blank=True)
+    joined_at = models.DateTimeField(auto_now_add=True)
+```
+
+### Project Models
 ```python
 # projects/models.py
 from django.db import models
@@ -183,508 +190,468 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class Project(models.Model):
-    PROJECT_TYPES = [
-        ('hackathon', 'Hackathon'),
-        ('practice', 'Practice Project'),
-        ('personal', 'Personal Project'),
+    CATEGORY_CHOICES = [
+        ('web', 'Web Development'),
+        ('mobile', 'Mobile Development'),
+        ('ai_ml', 'AI/Machine Learning'),
+        ('blockchain', 'Blockchain'),
+        ('iot', 'Internet of Things'),
+        ('game', 'Game Development'),
+        ('other', 'Other')
     ]
-    
-    DIFFICULTY_LEVELS = [
-        ('beginner', 'Beginner'),
-        ('intermediate', 'Intermediate'),
-        ('advanced', 'Advanced'),
-    ]
-    
+
     title = models.CharField(max_length=200)
     description = models.TextField()
-    project_type = models.CharField(max_length=20, choices=PROJECT_TYPES)
-    difficulty = models.CharField(max_length=20, choices=DIFFICULTY_LEVELS)
-    category = models.CharField(max_length=50)
-    technologies = models.ManyToManyField(Skill)
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
-    prize_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    max_participants = models.IntegerField(default=100)
-    organizer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='organized_projects')
-    participants = models.ManyToManyField(User, through='ProjectParticipation', related_name='joined_projects')
-    image = models.ImageField(upload_to='project_images/', blank=True, null=True)
-    is_active = models.BooleanField(default=True)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+    technologies = models.ManyToManyField('profiles.Skill', blank=True)
+    github_url = models.URLField(blank=True)
+    live_url = models.URLField(blank=True)
+    image = models.ImageField(upload_to='projects/', blank=True)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_projects')
+    collaborators = models.ManyToManyField(User, blank=True, related_name='collaborated_projects')
+    likes = models.ManyToManyField(User, blank=True, related_name='liked_projects')
+    saved_by = models.ManyToManyField(User, blank=True, related_name='saved_projects')
+    is_featured = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-class ProjectParticipation(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    joined_at = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=20, default='active')
+    class Meta:
+        ordering = ['-created_at']
 ```
 
-### 3. Job Models
+---
 
+## 🔗 API Endpoints Structure
+
+### Authentication Endpoints
 ```python
-# jobs/models.py
-from django.db import models
+# authentication/urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('register/', views.RegisterView.as_view(), name='register'),
+    path('login/', views.LoginView.as_view(), name='login'),
+    path('logout/', views.LogoutView.as_view(), name='logout'),
+    path('refresh/', views.RefreshTokenView.as_view(), name='refresh'),
+    path('profile/', views.ProfileView.as_view(), name='profile'),
+    path('change-password/', views.ChangePasswordView.as_view(), name='change_password'),
+]
+```
+
+### Frontend Integration Points
+
+#### 1. Authentication Context Integration
+```typescript
+// src/contexts/AuthContext.tsx - API Integration Points
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+
+// Login function integration
+const login = async (email: string, password: string) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/login/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
+    
+    if (!response.ok) throw new Error('Login failed');
+    
+    const data = await response.json();
+    localStorage.setItem('access_token', data.access);
+    localStorage.setItem('refresh_token', data.refresh);
+    setUser(data.user);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+```
+
+#### 2. Profile Page Integration
+```typescript
+// Integration for Profile page (src/pages/Profile.tsx)
+const updateProfile = async (profileData: FormData) => {
+  const token = localStorage.getItem('access_token');
+  
+  const response = await fetch(`${API_BASE_URL}/profiles/update/`, {
+    method: 'PATCH',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+    body: profileData, // FormData for file uploads
+  });
+  
+  if (!response.ok) throw new Error('Profile update failed');
+  return response.json();
+};
+
+// Skills integration
+const getAvailableSkills = async () => {
+  const response = await fetch(`${API_BASE_URL}/profiles/skills/`);
+  return response.json();
+};
+```
+
+#### 3. Hackathons Integration
+```typescript
+// Integration for Hackathons page (src/pages/Hackathons.tsx)
+const getHackathons = async (filters?: any) => {
+  const params = new URLSearchParams(filters);
+  const response = await fetch(`${API_BASE_URL}/hackathons/?${params}`);
+  return response.json();
+};
+
+const joinHackathon = async (hackathonId: number, teamData: any) => {
+  const token = localStorage.getItem('access_token');
+  
+  const response = await fetch(`${API_BASE_URL}/hackathons/${hackathonId}/join/`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(teamData),
+  });
+  
+  return response.json();
+};
+```
+
+#### 4. Projects Integration
+```typescript
+// Integration for Project pages
+const getProjects = async (filters?: any) => {
+  const params = new URLSearchParams(filters);
+  const response = await fetch(`${API_BASE_URL}/projects/?${params}`);
+  return response.json();
+};
+
+const likeProject = async (projectId: number) => {
+  const token = localStorage.getItem('access_token');
+  
+  const response = await fetch(`${API_BASE_URL}/projects/${projectId}/like/`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+  
+  return response.json();
+};
+
+const saveProject = async (projectId: number) => {
+  const token = localStorage.getItem('access_token');
+  
+  const response = await fetch(`${API_BASE_URL}/projects/${projectId}/save/`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+  
+  return response.json();
+};
+```
+
+---
+
+## 📱 Real-time Features Integration
+
+### WebSocket Configuration
+```python
+# Django Channels for real-time notifications
+# asgi.py
+import os
+from django.core.asgi import get_asgi_application
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.auth import AuthMiddlewareStack
+from notifications.routing import websocket_urlpatterns
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'diceytech_backend.settings')
+
+application = ProtocolTypeRouter({
+    "http": get_asgi_application(),
+    "websocket": AuthMiddlewareStack(
+        URLRouter(websocket_urlpatterns)
+    ),
+})
+```
+
+### Frontend WebSocket Integration
+```typescript
+// src/hooks/useWebSocket.ts
+export const useWebSocket = (userId: string) => {
+  const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [notifications, setNotifications] = useState<any[]>([]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+    const ws = new WebSocket(`ws://localhost:8000/ws/notifications/${userId}/?token=${token}`);
+    
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      setNotifications(prev => [data, ...prev]);
+    };
+    
+    setSocket(ws);
+    
+    return () => ws.close();
+  }, [userId]);
+
+  return { socket, notifications };
+};
+```
+
+---
+
+## 🔧 Environment Configuration
+
+### Django Environment Variables
+```bash
+# .env file for Django backend
+DEBUG=False
+SECRET_KEY=your-secret-key-here
+DATABASE_URL=postgresql://user:password@host:port/dbname
+
+# AWS Configuration
+AWS_ACCESS_KEY_ID=your-aws-access-key
+AWS_SECRET_ACCESS_KEY=your-aws-secret-key
+AWS_STORAGE_BUCKET_NAME=diceytech-media
+AWS_S3_REGION_NAME=us-east-1
+
+# Redis Configuration
+REDIS_URL=redis://your-elasticache-endpoint:6379/0
+
+# Email Configuration
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_HOST_USER=your-email@gmail.com
+EMAIL_HOST_PASSWORD=your-app-password
+
+# Social Auth
+GITHUB_CLIENT_ID=your-github-client-id
+GITHUB_CLIENT_SECRET=your-github-client-secret
+```
+
+### Frontend Environment Variables
+```bash
+# .env file for React frontend
+REACT_APP_API_URL=https://api.diceytech.com
+REACT_APP_WS_URL=wss://api.diceytech.com
+REACT_APP_AWS_S3_BUCKET=diceytech-media
+REACT_APP_ENVIRONMENT=production
+```
+
+---
+
+## 🚀 Deployment Configuration
+
+### Docker Configuration
+```dockerfile
+# Dockerfile for Django backend
+FROM python:3.11
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . .
+
+EXPOSE 8000
+
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "diceytech_backend.wsgi:application"]
+```
+
+### AWS ECS Task Definition
+```json
+{
+  "family": "diceytech-backend",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::account:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "django-app",
+      "image": "your-account.dkr.ecr.region.amazonaws.com/diceytech-backend:latest",
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "DATABASE_URL",
+          "value": "postgresql://..."
+        }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+## 📊 Performance Optimization
+
+### Caching Strategy
+```python
+# Django caching implementation
+from django.core.cache import cache
+from django.views.decorators.cache import cache_page
+
+@cache_page(60 * 15)  # Cache for 15 minutes
+def hackathon_list(request):
+    # View logic here
+    pass
+
+# Custom caching for complex queries
+def get_user_dashboard_data(user_id):
+    cache_key = f"dashboard_{user_id}"
+    data = cache.get(cache_key)
+    
+    if not data:
+        data = {
+            'projects': user.created_projects.count(),
+            'hackathons': user.hackathonparticipation_set.count(),
+            'achievements': user.achievements.count(),
+        }
+        cache.set(cache_key, data, 60 * 30)  # Cache for 30 minutes
+    
+    return data
+```
+
+### Database Optimization
+```python
+# Optimized queries with select_related and prefetch_related
+def get_hackathons_optimized():
+    return Hackathon.objects.select_related('organizer').prefetch_related(
+        'participants', 'technologies'
+    ).filter(status='active')
+
+# Database indexing
+class Hackathon(models.Model):
+    # ... other fields
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['status', 'start_date']),
+            models.Index(fields=['difficulty', 'created_at']),
+        ]
+```
+
+---
+
+## 🔐 Security Implementation
+
+### JWT Authentication
+```python
+# Custom JWT authentication
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        
+        # Add custom claims
+        token['user_id'] = user.id
+        token['email'] = user.email
+        token['full_name'] = user.full_name
+        
+        return token
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
+```
+
+### CORS Configuration
+```python
+# settings.py - CORS configuration
+CORS_ALLOWED_ORIGINS = [
+    "https://diceytech.com",
+    "https://app.diceytech.com",
+    "http://localhost:3000",  # Development
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOWED_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+```
+
+---
+
+## 📋 Testing Strategy
+
+### Backend Testing
+```python
+# tests/test_hackathons.py
+from django.test import TestCase
 from django.contrib.auth import get_user_model
+from hackathons.models import Hackathon
 
 User = get_user_model()
 
-class Job(models.Model):
-    JOB_TYPES = [
-        ('full-time', 'Full-time'),
-        ('part-time', 'Part-time'),
-        ('contract', 'Contract'),
-        ('internship', 'Internship'),
-    ]
-    
-    LOCATION_TYPES = [
-        ('remote', 'Remote'),
-        ('on-site', 'On-site'),
-        ('hybrid', 'Hybrid'),
-    ]
-    
-    title = models.CharField(max_length=200)
-    company = models.CharField(max_length=100)
-    description = models.TextField()
-    requirements = models.TextField()
-    job_type = models.CharField(max_length=20, choices=JOB_TYPES)
-    location_type = models.CharField(max_length=20, choices=LOCATION_TYPES)
-    location = models.CharField(max_length=100)
-    salary_min = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    salary_max = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    skills_required = models.ManyToManyField(Skill)
-    company_logo = models.ImageField(upload_to='company_logos/', blank=True, null=True)
-    posted_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-class JobApplication(models.Model):
-    STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('reviewed', 'Reviewed'),
-        ('interviewed', 'Interviewed'),
-        ('accepted', 'Accepted'),
-        ('rejected', 'Rejected'),
-    ]
-    
-    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='applications')
-    applicant = models.ForeignKey(User, on_delete=models.CASCADE, related_name='job_applications')
-    cover_letter = models.TextField(blank=True)
-    resume = models.FileField(upload_to='resumes/', blank=True, null=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-    applied_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-```
-
----
-
-## API Endpoints
-
-### 1. Authentication Views
-
-```python
-# accounts/views.py
-from rest_framework import generics, status
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth import authenticate
-from .serializers import *
-
-class RegisterView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserRegistrationSerializer
-    permission_classes = [AllowAny]
-
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def login_view(request):
-    email = request.data.get('email')
-    password = request.data.get('password')
-    
-    user = authenticate(email=email, password=password)
-    if user:
-        refresh = RefreshToken.for_user(user)
-        return Response({
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
-            'user': UserSerializer(user).data
-        })
-    return Response({'error': 'Invalid credentials'}, status=400)
-
-class ProfileView(generics.RetrieveUpdateAPIView):
-    serializer_class = UserProfileSerializer
-    
-    def get_object(self):
-        return self.request.user
-```
-
-### 2. Project Views
-
-```python
-# projects/views.py
-from rest_framework import generics, status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from .models import Project, ProjectParticipation
-from .serializers import ProjectSerializer
-
-class ProjectListView(generics.ListCreateAPIView):
-    queryset = Project.objects.filter(is_active=True)
-    serializer_class = ProjectSerializer
-    
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        project_type = self.request.query_params.get('type', None)
-        difficulty = self.request.query_params.get('difficulty', None)
-        
-        if project_type:
-            queryset = queryset.filter(project_type=project_type)
-        if difficulty:
-            queryset = queryset.filter(difficulty=difficulty)
-            
-        return queryset.order_by('-created_at')
-
-class ProjectDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
-
-@api_view(['POST'])
-def join_project(request, project_id):
-    try:
-        project = Project.objects.get(id=project_id)
-        participation, created = ProjectParticipation.objects.get_or_create(
-            user=request.user,
-            project=project
+class HackathonTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='testuser',
+            email='test@example.com',
+            password='testpass123'
         )
         
-        if created:
-            return Response({'message': 'Successfully joined project'})
-        else:
-            return Response({'message': 'Already joined this project'}, status=400)
-    except Project.DoesNotExist:
-        return Response({'error': 'Project not found'}, status=404)
-```
-
----
-
-## Frontend Integration
-
-### 1. API Service Layer
-
-```typescript
-// src/services/api.ts
-import axios from 'axios';
-
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
-
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Request interceptor to add auth token
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-// Response interceptor to handle token refresh
-api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-    
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      
-      try {
-        const refreshToken = localStorage.getItem('refresh_token');
-        const response = await axios.post(`${API_BASE_URL}/token/refresh/`, {
-          refresh: refreshToken,
-        });
+    def test_hackathon_creation(self):
+        hackathon = Hackathon.objects.create(
+            title='Test Hackathon',
+            description='Test description',
+            organizer=self.user,
+            # ... other required fields
+        )
         
-        const { access } = response.data;
-        localStorage.setItem('access_token', access);
-        
-        return api(originalRequest);
-      } catch (refreshError) {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        window.location.href = '/login';
-      }
+        self.assertEqual(hackathon.title, 'Test Hackathon')
+        self.assertEqual(hackathon.organizer, self.user)
+```
+
+### Frontend Testing Integration
+```typescript
+// src/utils/testUtils.ts - API mocking for tests
+export const mockApiResponse = (endpoint: string, response: any) => {
+  global.fetch = jest.fn().mockImplementation((url) => {
+    if (url.includes(endpoint)) {
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(response),
+      });
     }
-    
-    return Promise.reject(error);
-  }
-);
-
-export default api;
-```
-
-### 2. Auth Service
-
-```typescript
-// src/services/authService.ts
-import api from './api';
-
-export const authService = {
-  login: async (email: string, password: string) => {
-    const response = await api.post('/auth/login/', { email, password });
-    const { access, refresh, user } = response.data;
-    
-    localStorage.setItem('access_token', access);
-    localStorage.setItem('refresh_token', refresh);
-    localStorage.setItem('user', JSON.stringify(user));
-    
-    return { user, access, refresh };
-  },
-
-  register: async (userData: any) => {
-    const response = await api.post('/auth/register/', userData);
-    return response.data;
-  },
-
-  logout: () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('user');
-  },
-
-  getCurrentUser: () => {
-    const userStr = localStorage.getItem('user');
-    return userStr ? JSON.parse(userStr) : null;
-  },
-
-  updateProfile: async (profileData: any) => {
-    const response = await api.patch('/auth/profile/', profileData);
-    localStorage.setItem('user', JSON.stringify(response.data));
-    return response.data;
-  },
-
-  uploadProfilePicture: async (file: File) => {
-    const formData = new FormData();
-    formData.append('profile_picture', file);
-    
-    const response = await api.patch('/auth/profile/', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    
-    return response.data;
-  },
-};
-```
-
-### 3. Project Service
-
-```typescript
-// src/services/projectService.ts
-import api from './api';
-
-export const projectService = {
-  getProjects: async (filters = {}) => {
-    const response = await api.get('/projects/', { params: filters });
-    return response.data;
-  },
-
-  getProject: async (id: string) => {
-    const response = await api.get(`/projects/${id}/`);
-    return response.data;
-  },
-
-  createProject: async (projectData: any) => {
-    const response = await api.post('/projects/', projectData);
-    return response.data;
-  },
-
-  joinProject: async (projectId: string) => {
-    const response = await api.post(`/projects/${projectId}/join/`);
-    return response.data;
-  },
-
-  uploadProjectImage: async (projectId: string, file: File) => {
-    const formData = new FormData();
-    formData.append('image', file);
-    
-    const response = await api.patch(`/projects/${projectId}/`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    
-    return response.data;
-  },
+    return Promise.reject(new Error('API endpoint not mocked'));
+  });
 };
 ```
 
 ---
 
-## AWS Configuration
+## 📈 Monitoring & Analytics
 
-### 1. S3 Bucket Setup
-
-```bash
-# Create S3 bucket
-aws s3 mb s3://diceytech-storage --region us-east-1
-
-# Set bucket policy for public read access
-aws s3api put-bucket-policy --bucket diceytech-storage --policy file://bucket-policy.json
-```
-
-### 2. Bucket Policy (bucket-policy.json)
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "PublicReadGetObject",
-      "Effect": "Allow",
-      "Principal": "*",
-      "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::diceytech-storage/*"
-    }
-  ]
-}
-```
-
-### 3. IAM User Policy
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:DeleteObject",
-        "s3:GetObject",
-        "s3:PutObject",
-        "s3:PutObjectAcl"
-      ],
-      "Resource": "arn:aws:s3:::diceytech-storage/*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": "s3:ListBucket",
-      "Resource": "arn:aws:s3:::diceytech-storage"
-    }
-  ]
-}
-```
-
----
-
-## Environment Variables
-
-### 1. Django (.env)
-
-```env
-DEBUG=True
-SECRET_KEY=your-secret-key-here
-DATABASE_URL=postgresql://user:password@localhost:5432/diceytech
-AWS_ACCESS_KEY_ID=your-aws-access-key
-AWS_SECRET_ACCESS_KEY=your-aws-secret-key
-AWS_STORAGE_BUCKET_NAME=diceytech-storage
-AWS_S3_REGION_NAME=us-east-1
-ALLOWED_HOSTS=localhost,127.0.0.1,your-domain.com
-```
-
-### 2. React (.env)
-
-```env
-REACT_APP_API_URL=http://localhost:8000/api
-REACT_APP_AWS_S3_BUCKET=diceytech-storage
-REACT_APP_AWS_REGION=us-east-1
-```
-
----
-
-## Deployment
-
-### 1. Django Deployment (AWS EC2)
-
-```bash
-# Install dependencies
-sudo apt update
-sudo apt install python3-pip python3-venv nginx postgresql
-
-# Create virtual environment
-python3 -m venv venv
-source venv/bin/activate
-
-# Install requirements
-pip install -r requirements.txt
-
-# Configure Gunicorn
-pip install gunicorn
-gunicorn --bind 0.0.0.0:8000 diceytech.wsgi
-
-# Configure Nginx
-sudo nano /etc/nginx/sites-available/diceytech
-sudo ln -s /etc/nginx/sites-available/diceytech /etc/nginx/sites-enabled/
-sudo systemctl restart nginx
-```
-
-### 2. React Deployment (AWS S3 + CloudFront)
-
-```bash
-# Build for production
-npm run build
-
-# Deploy to S3
-aws s3 sync build/ s3://diceytech-frontend --delete
-
-# Invalidate CloudFront cache
-aws cloudfront create-invalidation --distribution-id YOUR_DISTRIBUTION_ID --paths "/*"
-```
-
----
-
-## Testing the Integration
-
-### 1. Test Authentication
-
-```bash
-# Register a new user
-curl -X POST http://localhost:8000/api/auth/register/ \
-  -H "Content-Type: application/json" \
-  -d '{"username": "testuser", "email": "test@example.com", "password": "testpass123"}'
-
-# Login
-curl -X POST http://localhost:8000/api/auth/login/ \
-  -H "Content-Type: application/json" \
-  -d '{"email": "test@example.com", "password": "testpass123"}'
-```
-
-### 2. Test File Upload
-
-```bash
-# Upload profile picture
-curl -X PATCH http://localhost:8000/api/auth/profile/ \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -F "profile_picture=@/path/to/image.jpg"
-```
-
----
-
-## Monitoring and Logging
-
-### 1. Django Logging Configuration
-
+### Django Logging Configuration
 ```python
-# settings.py
+# settings.py - Logging configuration
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -694,10 +661,16 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filename': 'django.log',
         },
+        'cloudwatch': {
+            'level': 'INFO',
+            'class': 'watchtower.CloudWatchLogHandler',
+            'boto3_session': boto3.Session(),
+            'log_group': 'diceytech-backend',
+        },
     },
     'loggers': {
         'django': {
-            'handlers': ['file'],
+            'handlers': ['file', 'cloudwatch'],
             'level': 'INFO',
             'propagate': True,
         },
@@ -705,20 +678,92 @@ LOGGING = {
 }
 ```
 
-### 2. AWS CloudWatch Integration
-
+### Performance Monitoring
 ```python
-# Install AWS CloudWatch handler
-pip install watchtower
+# Custom middleware for performance monitoring
+class PerformanceMonitoringMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
 
-# Add to Django settings
-LOGGING['handlers']['cloudwatch'] = {
-    'level': 'INFO',
-    'class': 'watchtower.CloudWatchLogHandler',
-    'log_group': 'diceytech-backend',
-}
+    def __call__(self, request):
+        start_time = time.time()
+        
+        response = self.get_response(request)
+        
+        duration = time.time() - start_time
+        
+        # Log slow requests
+        if duration > 1.0:  # Requests taking more than 1 second
+            logger.warning(f"Slow request: {request.path} took {duration:.2f}s")
+        
+        return response
 ```
 
 ---
 
-This integration guide provides a comprehensive foundation for connecting your DiceyTech platform to Django and AWS services. Each section can be expanded based on specific requirements and use cases.
+## 🔄 Data Migration Strategy
+
+### User Data Migration
+```python
+# management/commands/migrate_user_data.py
+from django.core.management.base import BaseCommand
+from django.contrib.auth import get_user_model
+
+class Command(BaseCommand):
+    help = 'Migrate user data from legacy system'
+
+    def handle(self, *args, **options):
+        # Migration logic here
+        self.stdout.write(
+            self.style.SUCCESS('Successfully migrated user data')
+        )
+```
+
+---
+
+## 🎯 Next Steps for Implementation
+
+### Phase 1: Core Setup (Week 1-2)
+1. Set up Django project with basic models
+2. Configure AWS services (RDS, S3, ElastiCache)
+3. Implement authentication system
+4. Set up basic API endpoints
+
+### Phase 2: Feature Implementation (Week 3-6)
+1. Implement hackathon management system
+2. Build project showcase functionality  
+3. Create user profile management
+4. Add notification system
+
+### Phase 3: Advanced Features (Week 7-10)
+1. Implement real-time features with WebSockets
+2. Add search and filtering capabilities
+3. Build analytics and reporting
+4. Implement caching and optimization
+
+### Phase 4: Production Deployment (Week 11-12)
+1. Set up production AWS infrastructure
+2. Implement monitoring and logging
+3. Configure CI/CD pipelines
+4. Performance testing and optimization
+
+---
+
+## 🤝 Support & Maintenance
+
+**REDtech Africa Development Team**  
+Email: tech-support@redtechafrica.com  
+
+**David Ogundepo - Lead Architect**  
+Email: david.ogundepo@diceytech.com  
+
+**Documentation Updates**  
+This guide is updated regularly. Check the DiceyTech platform repository for the latest version.
+
+---
+
+*This integration guide ensures seamless connection between the DiceyTech frontend and your Django/AWS backend infrastructure. Follow the implementation phases for systematic deployment.*
+
+**Last Updated:** December 2024  
+**Version:** 2.1  
+**Maintained by:** REDtech Africa & David Ogundepo
