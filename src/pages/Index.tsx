@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -181,16 +182,21 @@ const Index = () => {
             <p className="text-xs text-gray-600 dark:text-gray-300">& Participants</p>
           </div>
           
-          {/* Scrolling animation container */}
-          <div className="relative h-80 overflow-hidden">
-            <div className="absolute inset-0 flex flex-col animate-scroll">
+          {/* Fixed scrolling animation container */}
+          <div className="relative h-80 overflow-hidden w-full">
+            <div className="flex flex-col space-y-4 animate-scroll">
               {[...winnerImages, ...winnerImages].map((image, index) => (
-                <div key={index} className="mb-4 flex-shrink-0">
+                <div key={index} className="flex justify-center flex-shrink-0">
                   <div className="relative">
                     <img 
                       src={image} 
                       alt={`DiceyTech Winner ${(index % winnerImages.length) + 1}`}
                       className="w-20 h-16 rounded-lg object-cover border-2 border-dicey-magenta shadow-lg"
+                      onError={(e) => {
+                        console.log('Image failed to load:', image);
+                        e.currentTarget.style.display = 'none';
+                      }}
+                      onLoad={() => console.log('Image loaded successfully:', image)}
                     />
                     <div className="absolute -top-1 -right-1 w-4 h-4 bg-dicey-yellow rounded-full flex items-center justify-center">
                       <Trophy className="w-2 h-2 text-dicey-dark-pink" />
