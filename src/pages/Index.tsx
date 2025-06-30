@@ -188,7 +188,7 @@ const Index = () => {
                   <img 
                     src={image} 
                     alt={`DiceyTech Image ${(index % winnerImages.length) + 1}`}
-                    className="w-80 h-64 rounded-lg object-cover border-2 border-gray-300 dark:border-gray-600 shadow-lg transition-transform duration-300 hover:scale-105"
+                    className="w-80 h-104 rounded-lg object-cover border-2 border-gray-300 dark:border-gray-600 shadow-lg transition-transform duration-300 hover:scale-105"
                     onError={(e) => {
                       console.log('Image failed to load:', image);
                       e.currentTarget.style.display = 'none';
