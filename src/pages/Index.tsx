@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -188,7 +187,7 @@ const Index = () => {
           
           {/* Scrolling animation container */}
           <div className="relative h-80 overflow-hidden">
-            <div className="absolute inset-0 flex flex-col animate-[scroll_20s_linear_infinite]">
+            <div className="absolute inset-0 flex flex-col animate-scroll">
               {[...winnerImages, ...winnerImages].map((image, index) => (
                 <div key={index} className="mb-4 flex-shrink-0">
                   <div className="relative">
@@ -377,17 +376,6 @@ const Index = () => {
           </Card>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes scroll {
-          0% {
-            transform: translateY(0);
-          }
-          100% {
-            transform: translateY(-50%);
-          }
-        }
-      `}</style>
     </div>
   );
 };

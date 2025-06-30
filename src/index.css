@@ -150,4 +150,18 @@
   .dark .card-hover:hover {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
   }
+
+  /* Scrolling animation for winner images */
+  @keyframes scroll {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-50%);
+    }
+  }
+
+  .animate-scroll {
+    animation: scroll 20s linear infinite;
+  }
 }
