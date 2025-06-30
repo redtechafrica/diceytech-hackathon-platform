@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -176,30 +175,29 @@ const Index = () => {
         </div>
 
         {/* Center - Scrolling Winners Images */}
-        <div className="w-32 flex flex-col justify-center items-center bg-dicey-yellow/5 dark:bg-dicey-yellow/10 border-x border-dicey-yellow/20">
-          <div className="text-center mb-4">
-            <h3 className="text-sm font-bold text-dicey-dark-pink dark:text-dicey-yellow mb-1">Our Winners</h3>
-            <p className="text-xs text-gray-600 dark:text-gray-300">& Participants</p>
-          </div>
+        <div className="w-48 flex flex-col justify-center items-center bg-dicey-yellow/5 dark:bg-dicey-yellow/10 border-x border-dicey-yellow/20 relative">
+          {/* Fade gradient overlays */}
+          <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-white via-white/80 to-transparent dark:from-gray-900 dark:via-gray-900/80 dark:to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white via-white/80 to-transparent dark:from-gray-900 dark:via-gray-900/80 dark:to-transparent z-10 pointer-events-none"></div>
           
-          {/* Fixed scrolling animation container */}
-          <div className="relative h-80 overflow-hidden w-full">
-            <div className="flex flex-col space-y-4 animate-scroll">
+          {/* Scrolling animation container */}
+          <div className="relative h-full w-full overflow-hidden">
+            <div className="flex flex-col space-y-6 animate-scroll py-10">
               {[...winnerImages, ...winnerImages].map((image, index) => (
                 <div key={index} className="flex justify-center flex-shrink-0">
                   <div className="relative">
                     <img 
                       src={image} 
                       alt={`DiceyTech Winner ${(index % winnerImages.length) + 1}`}
-                      className="w-20 h-16 rounded-lg object-cover border-2 border-dicey-magenta shadow-lg"
+                      className="w-32 h-24 rounded-xl object-cover border-3 border-dicey-magenta shadow-2xl transition-transform duration-300 hover:scale-105"
                       onError={(e) => {
                         console.log('Image failed to load:', image);
                         e.currentTarget.style.display = 'none';
                       }}
                       onLoad={() => console.log('Image loaded successfully:', image)}
                     />
-                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-dicey-yellow rounded-full flex items-center justify-center">
-                      <Trophy className="w-2 h-2 text-dicey-dark-pink" />
+                    <div className="absolute -top-2 -right-2 w-6 h-6 bg-dicey-yellow rounded-full flex items-center justify-center shadow-lg">
+                      <Trophy className="w-3 h-3 text-dicey-dark-pink" />
                     </div>
                   </div>
                 </div>
