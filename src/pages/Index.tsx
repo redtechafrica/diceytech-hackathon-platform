@@ -175,31 +175,26 @@ const Index = () => {
         </div>
 
         {/* Center - Scrolling Winners Images */}
-        <div className="w-48 flex flex-col justify-center items-center bg-dicey-yellow/5 dark:bg-dicey-yellow/10 border-x border-dicey-yellow/20 relative">
+        <div className="w-48 flex flex-col justify-center items-center relative">
           {/* Fade gradient overlays */}
           <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-white via-white/80 to-transparent dark:from-gray-900 dark:via-gray-900/80 dark:to-transparent z-10 pointer-events-none"></div>
           <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white via-white/80 to-transparent dark:from-gray-900 dark:via-gray-900/80 dark:to-transparent z-10 pointer-events-none"></div>
           
           {/* Scrolling animation container */}
           <div className="relative h-full w-full overflow-hidden">
-            <div className="flex flex-col space-y-6 animate-scroll py-10">
-              {[...winnerImages, ...winnerImages].map((image, index) => (
+            <div className="flex flex-col space-y-6 animate-scroll-seamless py-10">
+              {[...winnerImages, ...winnerImages, ...winnerImages].map((image, index) => (
                 <div key={index} className="flex justify-center flex-shrink-0">
-                  <div className="relative">
-                    <img 
-                      src={image} 
-                      alt={`DiceyTech Winner ${(index % winnerImages.length) + 1}`}
-                      className="w-32 h-24 rounded-xl object-cover border-3 border-dicey-magenta shadow-2xl transition-transform duration-300 hover:scale-105"
-                      onError={(e) => {
-                        console.log('Image failed to load:', image);
-                        e.currentTarget.style.display = 'none';
-                      }}
-                      onLoad={() => console.log('Image loaded successfully:', image)}
-                    />
-                    <div className="absolute -top-2 -right-2 w-6 h-6 bg-dicey-yellow rounded-full flex items-center justify-center shadow-lg">
-                      <Trophy className="w-3 h-3 text-dicey-dark-pink" />
-                    </div>
-                  </div>
+                  <img 
+                    src={image} 
+                    alt={`DiceyTech Image ${(index % winnerImages.length) + 1}`}
+                    className="w-20 h-20 rounded-lg object-cover border-2 border-gray-300 dark:border-gray-600 shadow-lg transition-transform duration-300 hover:scale-105"
+                    onError={(e) => {
+                      console.log('Image failed to load:', image);
+                      e.currentTarget.style.display = 'none';
+                    }}
+                    onLoad={() => console.log('Image loaded successfully:', image)}
+                  />
                 </div>
               ))}
             </div>

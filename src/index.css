@@ -1,3 +1,4 @@
+
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @tailwind base;
 @tailwind components;
@@ -115,22 +116,22 @@
   }
 }
 
-/* Enhanced scrolling animation with smoother transitions */
-@keyframes scroll {
+/* Seamless scrolling animation */
+@keyframes scroll-seamless {
   0% {
     transform: translateY(0);
   }
   100% {
-    transform: translateY(-50%);
+    transform: translateY(-33.33%);
   }
 }
 
-.animate-scroll {
-  animation: scroll 25s linear infinite;
+.animate-scroll-seamless {
+  animation: scroll-seamless 20s linear infinite;
 }
 
 /* Pause animation on hover */
-.animate-scroll:hover {
+.animate-scroll-seamless:hover {
   animation-play-state: paused;
 }
 
