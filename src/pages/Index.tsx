@@ -76,16 +76,12 @@ const Index = () => {
     { icon: Zap, title: 'Fast Track', desc: 'Accelerate career', color: 'text-dicey-dark-pink' },
   ];
 
-  // Scrolling images of winners and participants
+  // Updated with actual DiceyTech images
   const winnerImages = [
-    'https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=120&h=120&fit=crop&crop=faces',
-    'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=120&h=120&fit=crop&crop=faces',
-    'https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?w=120&h=120&fit=crop&crop=faces',
-    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&crop=faces',
-    'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=120&h=120&fit=crop&crop=faces',
-    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=faces',
-    'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop&crop=faces',
-    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop&crop=faces',
+    'https://firebasestorage.googleapis.com/v0/b/icdatinnovation.appspot.com/o/redtech_africa_websitee_v2%2Fdicey%20tech%2FScreenshot%202025-06-30%20at%2003.50.09.png?alt=media&token=8c1ad2df-8ecb-4e73-a199-75ef6bc9c857',
+    'https://firebasestorage.googleapis.com/v0/b/icdatinnovation.appspot.com/o/redtech_africa_websitee_v2%2Fdicey%20tech%2FScreenshot%202025-06-30%20at%2003.50.54.png?alt=media&token=d7337c0a-9cc1-438f-82a9-bb2845a919a0',
+    'https://firebasestorage.googleapis.com/v0/b/icdatinnovation.appspot.com/o/redtech_africa_websitee_v2%2Fdicey%20tech%2FScreenshot%202025-06-30%20at%2003.49.01.png?alt=media&token=acb1a13a-7228-4cd8-b7bd-3d53b570ef90',
+    'https://firebasestorage.googleapis.com/v0/b/icdatinnovation.appspot.com/o/redtech_africa_websitee_v2%2Fdicey%20tech%2FScreenshot%202025-06-30%20at%2003.54.11.png?alt=media&token=ef5c7b4f-cef7-4101-91e8-c7476b11d667',
   ];
 
   return (
@@ -193,8 +189,8 @@ const Index = () => {
                   <div className="relative">
                     <img 
                       src={image} 
-                      alt={`Winner ${index + 1}`}
-                      className="w-16 h-16 rounded-full object-cover border-2 border-dicey-magenta shadow-lg"
+                      alt={`DiceyTech Winner ${(index % winnerImages.length) + 1}`}
+                      className="w-20 h-16 rounded-lg object-cover border-2 border-dicey-magenta shadow-lg"
                     />
                     <div className="absolute -top-1 -right-1 w-4 h-4 bg-dicey-yellow rounded-full flex items-center justify-center">
                       <Trophy className="w-2 h-2 text-dicey-dark-pink" />
